@@ -1,23 +1,22 @@
 // SPDX-License-Identifier:MIT
 pragma solidity 0.8.17;
-contract Polling{
+contract Polling {
 
     string private statement;                       //Proposal Statment of the Poll
-    string[] private candidateList;
+    string[] private candidateList;                 //List of candidates
+    mapping(string => uint8) private votesReceived; //Voting count and candidate map
 
-    mapping(string => uint8) private votesReceived;
-
-    constructor(string memory _statement, string[] memory candidateNames){  //Constructor for Initialization of choices,Proposal statement.
+    constructor(string memory _statement, string[] memory candidateNames) {  //Constructor for Initialization of choices,Proposal statement.
         statement = _statement;
 
         candidateList = candidateNames;
+
         for(uint i = 0; i < candidateList.length; i++) {
             votesReceived[candidateList[i]] = 0;
         }
     }
 
     function Vote(string memory candidate)  public {     //Vote Function
-        
         require(validCandidate(candidate), "not available given candidate");
         votesReceived[candidate] += 1;
     }   
@@ -37,5 +36,13 @@ contract Polling{
             }
         }
         return false;
+    }
+
+    function getStatement() public view returns(string memory) {
+        return statement;
+    }
+
+    function getCandidates() public view returns(string[] memory) {
+        return candidateList;
     }
 }
